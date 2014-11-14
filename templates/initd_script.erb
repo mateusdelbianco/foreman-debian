@@ -19,7 +19,6 @@ DAEMON_USER=<%= Shellwords.escape user %>
 PIDDIR=<%= Shellwords.escape pidfile.dirname.to_s %>
 PIDFILE=<%= Shellwords.escape pidfile.to_s %>
 
-test -x ${DAEMON} || exit 0
 set -e
 . /lib/lsb/init-functions
 
