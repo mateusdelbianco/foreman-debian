@@ -27,6 +27,7 @@ case "${1}" in
 	start)
 		log_daemon_msg "Starting ${DESC}" "${NAME}"
 		mkdir -p ${PIDDIR}
+		test -x ${DAEMON} || log_end_msg 1
 		if (start-stop-daemon --start --oknodo --make-pidfile --background --pidfile $PIDFILE --chuid $DAEMON_USER --startas $DAEMON -- <%= Shellwords.join arguments %>); then
 			log_end_msg 0
 		else
