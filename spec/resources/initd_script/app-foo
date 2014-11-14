@@ -19,7 +19,6 @@ DAEMON_USER=app-user
 PIDDIR=/var/run/app-foo
 PIDFILE=/var/run/app-foo/app-foo.pid
 
-test -x ${DAEMON} || exit 0
 set -e
 . /lib/lsb/init-functions
 
