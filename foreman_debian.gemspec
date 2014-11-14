@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'foreman_debian'
-  s.version = '0.0.12'
+  s.version = '0.0.13'
   s.summary = 'Foreman wrapper for debian'
   s.description = 'Wrapper around foreman and Procfile concept. It implements basic exporting, installing and uninstalling of initd scripts and monit configs for debian.'
   s.authors = %w(cargomedia tomaszdurka)
