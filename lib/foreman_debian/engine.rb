@@ -1,3 +1,6 @@
+require 'thread'
+require 'thwait'
+
 module ForemanDebian
   class Engine
 
@@ -6,21 +9,24 @@ module ForemanDebian
     end
 
     def install(jobs, concurrency, user)
+      threads = []
       initd_engine = Initd::Engine.new(@app)
       monit_engine = Monit::Engine.new(@app)
       jobs.each do |name, command|
         if job_concurrency(concurrency, name) > 0
-          script = initd_engine.create_script(name, command, user)
-          initd_engine.install(script)
-          monit_engine.install(name, script)
+          threads << Thread.new do
+            script = initd_engine.create_script(name, command, user)
+            initd_engine.install(script)
+            monit_engine.install(name, script)
+          end
         end
       end
+      ThreadsWait.all_waits(*threads)
       initd_engine.cleanup
       monit_engine.cleanup
     end
 
     def uninstall
-      stop
       Initd::Engine.new(@app).cleanup
       Monit::Engine.new(@app).cleanup
     end

@@ -1,3 +1,6 @@
+require 'thread'
+require 'thwait'
+
 module ForemanDebian
   module EngineHelper
 
@@ -12,10 +15,12 @@ module ForemanDebian
     end
 
     def cleanup
+      threads = []
       each_file do |path|
         next if @exported.include? path
-        remove_file path
+        threads << Thread.new { remove_file path }
       end
+      ThreadsWait.all_waits(*threads)
     end
 
     def export_file(path)
@@ -40,8 +45,8 @@ module ForemanDebian
       Open3.popen3(command) do |i, o, e, w|
         i.close
         out, err, wait = o.read, e.read, w
-        s = wait ? wait.value : $?
-        s.success? or raise "Command `#{command}` failed: #{err}"
+        status = wait ? wait.value : $?
+        raise "Command `#{command}` failed: #{err}" unless status.success?
         out
       end
     end

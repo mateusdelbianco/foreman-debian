@@ -1,3 +1,6 @@
+require 'thread'
+require 'thwait'
+
 module ForemanDebian
   module Initd
     class Engine
@@ -30,15 +33,19 @@ module ForemanDebian
       end
 
       def start
+        threads = []
         each_file do |path|
-          start_file(path)
+          threads << Thread.new { start_file(path) }
         end
+        ThreadsWait.all_waits(*threads)
       end
 
       def stop
+        threads = []
         each_file do |path|
-          stop_file(path)
+          threads << Thread.new { stop_file(path) }
         end
+        ThreadsWait.all_waits(*threads)
       end
 
       def start_file(path)
@@ -53,8 +60,8 @@ module ForemanDebian
         exec_command("update-rc.d -f #{path.basename} remove") if path.dirname.eql? @system_export_path
       end
 
-      def remove_file(path)
-        stop_file(path)
+    def remove_file(path)
+      stop_file(path)
         super(path)
       end
     end
