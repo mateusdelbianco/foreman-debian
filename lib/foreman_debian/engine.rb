@@ -1,6 +1,3 @@
-require 'thread'
-require 'thwait'
-
 module ForemanDebian
   class Engine
 
