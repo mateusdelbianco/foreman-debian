@@ -7,5 +7,4 @@ node default {
     command => '/usr/local/bin/bundle install',
     cwd     => '/vagrant',
   }
-
 }
