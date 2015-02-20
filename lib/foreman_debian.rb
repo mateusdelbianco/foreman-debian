@@ -9,6 +9,7 @@ module ForemanDebian
   require 'fileutils'
   require 'logger'
   require 'open3'
+  require 'thwait'
   require 'foreman_debian/template'
   require 'foreman_debian/engine'
   require 'foreman_debian/engine_helper'
@@ -29,4 +30,6 @@ module ForemanDebian
   def self.logger=(logger)
     @logger = logger
   end
+
+  Thread.abort_on_exception = true
 end

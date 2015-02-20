@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 10.3'
   s.add_development_dependency 'rspec', '~> 2.0'
-  s.add_development_dependency 'fakefs', '~> 0.4'
+  s.add_development_dependency 'fakefs', '~> 0.5.2'
 end
