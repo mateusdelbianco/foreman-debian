@@ -21,7 +21,7 @@ module ForemanDebian
                                      :script_pidfile => script.pidfile,
                                      :script_path => script.path,
                                  })
-        config_path = @export_path.join(name)
+        config_path = @export_path.join(name + '.conf')
         File.open(config_path, 'w') do |file|
           file.puts(output)
           export_file(config_path)
