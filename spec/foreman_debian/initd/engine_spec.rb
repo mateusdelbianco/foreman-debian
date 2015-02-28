@@ -14,7 +14,7 @@ describe ForemanDebian::Initd::Engine, :fakefs do
   let(:engine) { ForemanDebian::Initd::Engine.new('app') }
 
   it 'creates script' do
-    script = engine.create_script('foo', 'foo arg1 arg2', 'app-user')
+    script = engine.create_script('foo', 'foo arg1 arg2', 'app-user', 'QUIT')
 
     expect(script.path.to_s).to be == '/etc/init.d/app-foo'
     expect(script.name).to be == 'app-foo'
@@ -22,12 +22,19 @@ describe ForemanDebian::Initd::Engine, :fakefs do
     expect(script.user).to be == 'app-user'
     expect(script.arguments).to be == %w(arg1 arg2)
     expect(script.pidfile.to_s).to be == '/var/run/app-foo/app-foo.pid'
+    expect(script.stop_signal).to be == 'QUIT'
   end
 
   it 'installs script' do
-    script = engine.create_script('foo', 'bar arg1 arg2', 'app-user')
+    script = engine.create_script('foo', 'bar arg1 arg2', 'app-user', 'TERM')
     engine.install(script)
     expect(File.read('/etc/init.d/app-foo')).to be == spec_resource('initd_script/app-foo')
+  end
+
+  it 'installs script with custom quit' do
+    script = engine.create_script('foo', 'bar arg1 arg2', 'app-user', 'QUIT')
+    engine.install(script)
+    expect(File.read('/etc/init.d/app-foo')).to be == spec_resource('initd_script_with_custom_stop_signal/app-foo')
   end
 
   it 'starts script' do

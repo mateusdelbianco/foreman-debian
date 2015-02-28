@@ -12,6 +12,10 @@ module ForemanDebian
            :attribute_name => :concurrency_encoded,
            :default => 'all=1'
 
+    option %w(-s --stop-signals), '<encoded_hash>', 'stop-signals (job1=QUIT,job2=TERM)',
+           :attribute_name => :stop_signals_encoded,
+           :default => 'all=TERM'
+
     option %w(-d --root), '<path>', 'working dir',
            :attribute_name => :working_dir,
            :default => Dir.getwd
@@ -22,7 +26,8 @@ module ForemanDebian
         jobs[name] = expand_procfile_command(command)
       end
       concurrency = decode_concurrency(concurrency_encoded)
-      get_engine.install(jobs, concurrency, user)
+      stop_signals = decode_stop_signals(stop_signals_encoded)
+      get_engine.install(jobs, concurrency, user, stop_signals)
     end
 
     def expand_procfile_command(command)
@@ -57,6 +62,17 @@ module ForemanDebian
         concurrency_hash[name] = concurrency.to_i
       end
       concurrency_hash
+    end
+
+    def decode_stop_signals(stop_signals_encoded)
+      stop_signals_hash = {}
+      stop_signals_encoded.split(',').each do |entry|
+        parts = entry.split('=')
+        raise 'Invalid stop_signals option' unless parts.size == 2
+        name, stop_signals = parts
+        stop_signals_hash[name] = stop_signals
+      end
+      stop_signals_hash
     end
 
   end

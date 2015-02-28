@@ -11,13 +11,13 @@ module ForemanDebian
         setup
       end
 
-      def create_script(name, command, user)
+      def create_script(name, command, user, stop_signal)
         pidfile = pidfile(name)
         args = Shellwords.split(command)
         script = args.shift
         name = "#{@app}-#{name}"
         script_path = @export_path.join(name)
-        Script.new(script_path, name, name, user, script, args, pidfile)
+        Script.new(script_path, name, name, user, script, args, pidfile, stop_signal)
       end
 
       def install(script)
