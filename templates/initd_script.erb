@@ -28,7 +28,7 @@ case "${1}" in
 		log_daemon_msg "Starting ${DESC}" "${NAME}"
 		mkdir -p ${PIDDIR}
 		test -x ${DAEMON} || log_end_msg 1
-		if (start-stop-daemon --start --oknodo --make-pidfile --background --pidfile $PIDFILE --chuid $DAEMON_USER --startas /bin/bash --chdir <%= Shellwords.escape dir_root %> -- -c "$DAEMON <%= Shellwords.join arguments %>"); then
+		if (start-stop-daemon --start --oknodo --make-pidfile --background --pidfile $PIDFILE --chuid $DAEMON_USER --startas /bin/bash --chdir <%= Shellwords.escape dir_root %> -- -c "$DAEMON <%= arguments.join(' ') %>"); then
 			log_end_msg 0
 		else
 			log_end_msg 1
