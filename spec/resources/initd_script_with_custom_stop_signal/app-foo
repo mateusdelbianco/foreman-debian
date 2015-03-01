@@ -28,7 +28,7 @@ case "${1}" in
 		log_daemon_msg "Starting ${DESC}" "${NAME}"
 		mkdir -p ${PIDDIR}
 		test -x ${DAEMON} || log_end_msg 1
-		if (start-stop-daemon --start --oknodo --make-pidfile --background --pidfile $PIDFILE --chuid $DAEMON_USER --startas $DAEMON -- "arg1 arg2"); then
+		if (start-stop-daemon --start --oknodo --make-pidfile --background --pidfile $PIDFILE --chuid $DAEMON_USER --startas $DAEMON --chdir /custom/path -- "arg1 arg2"); then
 			log_end_msg 0
 		else
 			log_end_msg 1

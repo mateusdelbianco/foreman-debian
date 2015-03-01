@@ -5,14 +5,14 @@ module ForemanDebian
       @app = app
     end
 
-    def install(jobs, concurrency, user, stop_signals)
+    def install(jobs, concurrency, user, stop_signals, dir_root)
       threads = []
       initd_engine = Initd::Engine.new(@app)
       monit_engine = Monit::Engine.new(@app)
       jobs.each do |name, command|
         if job_concurrency(concurrency, name) > 0
           threads << Thread.new do
-            script = initd_engine.create_script(name, command, user, job_stop_signal(stop_signals, name))
+            script = initd_engine.create_script(name, command, user, job_stop_signal(stop_signals, name), dir_root)
             initd_engine.install(script)
             monit_engine.install(name, script)
           end

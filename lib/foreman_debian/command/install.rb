@@ -27,7 +27,7 @@ module ForemanDebian
       end
       concurrency = decode_concurrency(concurrency_encoded)
       stop_signals = decode_stop_signals(stop_signals_encoded)
-      get_engine.install(jobs, concurrency, user, stop_signals)
+      get_engine.install(jobs, concurrency, user, stop_signals, dir_root)
     end
 
     def expand_procfile_command(command)
